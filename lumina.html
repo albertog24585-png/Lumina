@@ -1,0 +1,577 @@
+
+
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumina - Red Social & Videos Cortos</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome Icons CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts: Inter & Space Grotesk -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@700;800;900&display=swap" rel="stylesheet">
+​<script>
+tailwind.config = {
+darkMode: 'class',
+theme: {
+extend: {
+colors: {
+lumina: {
+bg: '#0A0A0F',
+card: '#12121C',
+cardHover: '#1A1A28',
+border: '#2A2A3D',
+cyan: '#00F0FF',
+magenta: '#FF007F',
+purple: '#8B00FF',
+}
+},
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+display: ['Space Grotesk', 'sans-serif'],
+},
+boxShadow: {
+'neon-cyan': '0 0 15px rgba(0, 240, 255, 0.4)',
+'neon-magenta': '0 0 15px rgba(255, 0, 127, 0.4)',
+'glow-lg': '0 0 25px rgba(0, 240, 255, 0.25), 0 0 10px rgba(255, 0, 127, 0.25)'
+}
+}
+}
+}
+</script>
+​<style>
+body {
+background-color: #0A0A0F;
+color: #E2E8F0;
+font-family: 'Inter', sans-serif;
+}
+​/* Animación de parpadeo neón para la letra L */
+@keyframes neonFlickerL {
+0%, 100% {
+opacity: 1;
+text-shadow: 0 0 10px #00F0FF, 0 0 20px #00F0FF, 0 0 40px #00F0FF, 0 0 80px #FF007F;
+}
+33% {
+opacity: 0.85;
+text-shadow: 0 0 5px #00F0FF, 0 0 15px #00F0FF;
+}
+34% {
+opacity: 0.2;
+text-shadow: none;
+}
+35% {
+opacity: 0.95;
+text-shadow: 0 0 12px #00F0FF, 0 0 35px #FF007F;
+}
+40% {
+opacity: 0.15;
+text-shadow: none;
+}
+42% {
+opacity: 1;
+text-shadow: 0 0 18px #00F0FF, 0 0 35px #00F0FF, 0 0 75px #FF007F;
+}
+70% {
+opacity: 0.9;
+text-shadow: 0 0 14px #00F0FF, 0 0 28px #FF007F;
+}
+72% {
+opacity: 0.3;
+text-shadow: none;
+}
+74% {
+opacity: 1;
+text-shadow: 0 0 20px #00F0FF, 0 0 40px #FF007F, 0 0 80px #FF007F;
+}
+}
+​.animate-flicker-l {
+animation: neonFlickerL 2.2s infinite alternate;
+}
+​.no-scrollbar::-webkit-scrollbar {
+display: none;
+}
+.no-scrollbar {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+​.neon-text-cyan {
+text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+​.neon-border-glow:focus {
+box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+border-color: #00F0FF;
+}
+​/* Scroll vertical suave para el feed de Shorts */
+.reels-container {
+scroll-snap-type: y mandatory;
+overflow-y: scroll;
+}
+.reel-card {
+scroll-snap-align: start;
+}
+</style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-lumina-magenta selection:text-white">
+​<!-- ================= SPLASH SCREEN (PANTALLA DE CARGA NEGRA CON LETRA L NEÓN) ================= -->
+<div id="splashScreen" class="fixed inset-0 z-50 bg-[#000000] flex flex-col items-center justify-center transition-opacity duration-700 pointer-events-auto">
+<div class="relative flex flex-col items-center">
+​<!-- Logo Letra L estilo Neón -->
+<div class="mb-2">
+<span class="font-display text-9xl font-black tracking-tighter text-white animate-flicker-l select-none">
+L<span class="text-lumina-cyan">.</span>
+</span>
+</div>
+​<p class="mt-2 text-xs tracking-[0.3em] uppercase text-gray-400 animate-pulse font-medium">L U M I N A</p>
+​<!-- Barra de Carga Neón -->
+<div class="w-36 h-1 bg-gray-900 border border-gray-800 rounded-full mt-8 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-lumina-cyan via-lumina-magenta to-lumina-purple rounded-full animate-[pulse_1.5s_infinite]"></div>
+</div>
+</div>
+</div>
+​<!-- ================= HEADER / NAVEGACIÓN ================= -->
+<header class="sticky top-0 z-40 bg-lumina-bg/90 backdrop-blur-md border-b border-lumina-border px-4 lg:px-8 py-3 transition-all">
+<div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+​<!-- LOGO -->
+<div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('explore')">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-lumina-magenta to-lumina-cyan flex items-center justify-center p-0.5 shadow-neon-cyan">
+<div class="w-full h-full bg-lumina-bg rounded-[10px] flex items-center justify-center">
+<span class="font-display font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-lumina-cyan to-lumina-magenta">L</span>
+</div>
+</div>
+<span class="font-display text-2xl font-bold tracking-wider text-white">
+LUMINA<span class="text-lumina-cyan neon-text-cyan">.</span>
+</span>
+</div>
+​<!-- NAVEGACIÓN DE SECCIONES (GALERÍA vs SHORTS) -->
+<nav class="flex items-center gap-2 bg-lumina-card p-1 rounded-full border border-lumina-border">
+<button 
+id="tabExploreBtn" 
+onclick="switchTab('explore')" 
+class="px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-gradient-to-r from-lumina-cyan to-lumina-purple text-black shadow-neon-cyan"
+>
+<i class="fa-solid fa-border-all mr-1.5"></i> Galerías
+</button>
+<button 
+id="tabShortsBtn" 
+onclick="switchTab('shorts')" 
+class="px-4 py-1.5 rounded-full text-xs font-bold text-gray-400 hover:text-white transition-all flex items-center gap-1.5"
+>
+<i class="fa-solid fa-clapperboard text-lumina-magenta"></i> Lumina Shorts
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-lumina-magenta opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-lumina-magenta"></span>
+</span>
+</button>
+</nav>
+​<!-- BARRA DE BÚSQUEDA -->
+<div class="hidden lg:flex flex-1 max-w-xs relative">
+<i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+<input 
+type="text" 
+id="searchInput"
+placeholder="Buscar publicaciones..." 
+class="w-full bg-lumina-card border border-lumina-border rounded-full py-1.5 pl-10 pr-4 text-xs text-white placeholder-gray-400 focus:outline-none neon-border-glow transition-all"
+oninput="handleSearch(this.value)"
+>
+</div>
+​<!-- BOTONES DE ACCIÓN & PERFIL -->
+<div class="flex items-center gap-3">
+<button 
+onclick="openModal('newPostModal')"
+class="flex items-center gap-2 bg-gradient-to-r from-lumina-magenta to-lumina-purple hover:from-lumina-magenta hover:to-lumina-cyan text-white px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 shadow-neon-magenta hover:scale-105 active:scale-95"
+>
+<i class="fa-solid fa-plus text-base"></i>
+<span class="hidden sm:inline">Crear</span>
+</button>
+​<button onclick="showToast('Sin notificaciones pendientes')" class="w-9 h-9 rounded-full bg-lumina-card border border-lumina-border flex items-center justify-center text-gray-300 hover:text-lumina-cyan hover:border-lumina-cyan transition-all relative">
+<i class="fa-regular fa-bell text-sm"></i>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-lumina-magenta"></span>
+</button>
+​<div class="flex items-center gap-2 pl-2 border-l border-lumina-border cursor-pointer" onclick="showToast('Perfil de Usuario: Alex Rivers')">
+<img 
+src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" 
+alt="Perfil" 
+class="w-8 h-8 rounded-full object-cover border-2 border-lumina-cyan"
+/>
+</div>
+</div>
+</div>
+</header>
+​<!-- ================= VISTA 1: FEED DE GALERÍAS ================= -->
+<div id="exploreSection" class="flex-1 flex flex-col">
+<!-- FILTROS Y TAGS -->
+<section class="max-w-7xl mx-auto w-full px-4 lg:px-8 my-5">
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+<button onclick="filterByTag('Todos', this)" class="tag-btn px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border bg-lumina-cyan/20 border-lumina-cyan text-lumina-cyan shadow-neon-cyan">#Todos</button>
+<button onclick="filterByTag('ArteDigital', this)" class="tag-btn px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border border-lumina-border text-gray-300 hover:border-lumina-cyan hover:text-lumina-cyan">#ArteDigital</button>
+<button onclick="filterByTag('Fotografia', this)" class="tag-btn px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border border-lumina-border text-gray-300 hover:border-lumina-cyan hover:text-lumina-cyan">#Fotografia</button>
+<button onclick="filterByTag('3D', this)" class="tag-btn px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border border-lumina-border text-gray-300 hover:border-lumina-cyan hover:text-lumina-cyan">#3D</button>
+<button onclick="filterByTag('Cyberpunk', this)" class="tag-btn px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border border-lumina-border text-gray-300 hover:border-lumina-cyan hover:text-lumina-cyan">#Cyberpunk</button>
+</div>
+</section>
+​<!-- GRID DE PUBLICACIONES -->
+<main class="max-w-7xl mx-auto w-full px-4 lg:px-8 mb-12 flex-1">
+<div id="postsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+<div id="emptyFeedMessage" class="hidden text-center py-16">
+<i class="fa-solid fa-ghost text-5xl text-gray-600 mb-3"></i>
+<h3 class="text-xl font-bold text-gray-300">No hay creaciones disponibles</h3>
+</div>
+</main>
+</div>
+​<!-- ================= VISTA 2: LUMINA SHORTS (REELS VERTICALES) ================= -->
+<div id="shortsSection" class="hidden flex-1 flex items-center justify-center py-4 bg-black/60 relative">
+<div id="shortsFeed" class="reels-container w-full max-w-sm h-[82vh] rounded-2xl border border-lumina-border bg-black shadow-glow-lg relative overflow-hidden">
+</div>
+</div>
+​<!-- ================= MODAL DETALLE DE PUBLICACIÓN ================= -->
+<div id="detailModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+<div class="bg-lumina-card border border-lumina-border rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-glow-lg relative">
+<button onclick="closeModal('detailModal')" class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 border border-lumina-border text-white flex items-center justify-center hover:bg-lumina-magenta transition-all">
+<i class="fa-solid fa-xmark"></i>
+</button>
+​<div class="w-full md:w-3/5 bg-black flex items-center justify-center relative min-h-[250px]">
+<img id="detailImage" src="" alt="Arte" class="w-full h-full object-contain max-h-[70vh]">
+</div>
+​<div class="w-full md:w-2/5 p-5 flex flex-col justify-between border-t md:border-t-0 md:border-l border-lumina-border bg-lumina-card">
+<div>
+<div class="flex items-center gap-3 pb-4 border-b border-lumina-border">
+<img id="detailAvatar" src="" class="w-10 h-10 rounded-full object-cover border border-lumina-cyan">
+<div>
+<h4 id="detailAuthor" class="font-bold text-white text-sm"></h4>
+<p id="detailTag" class="text-xs text-lumina-cyan font-medium"></p>
+</div>
+</div>
+<div class="my-4">
+<h2 id="detailTitle" class="font-display font-bold text-xl text-white mb-2"></h2>
+<p id="detailDesc" class="text-sm text-gray-300 leading-relaxed"></p>
+</div>
+<div class="mt-4">
+<h5 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Comentarios</h5>
+<div id="commentsList" class="space-y-3 max-h-40 overflow-y-auto pr-1 no-scrollbar"></div>
+</div>
+</div>
+​<div class="pt-4 border-t border-lumina-border mt-4">
+<div class="flex items-center justify-between mb-4">
+<button id="detailLikeBtn" class="flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-lumina-magenta transition-colors">
+<i class="fa-regular fa-heart text-lg" id="detailHeartIcon"></i>
+<span id="detailLikesCount">0</span> Likes
+</button>
+<button onclick="showToast('Guardado')" class="text-gray-400 hover:text-lumina-cyan transition-colors">
+<i class="fa-regular fa-bookmark text-lg"></i>
+</button>
+</div>
+​<form onsubmit="handleAddComment(event)" class="flex gap-2">
+<input type="text" id="commentInput" placeholder="Escribe un comentario..." class="flex-1 bg-lumina-bg border border-lumina-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-lumina-cyan" required>
+<button type="submit" class="bg-lumina-cyan text-black font-bold px-3 py-2 rounded-lg text-xs hover:bg-opacity-90">
+<i class="fa-solid fa-paper-plane"></i>
+</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+​<!-- ================= MODAL CREAR NUEVO POST / SHORT ================= -->
+<div id="newPostModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+<div class="bg-lumina-card border border-lumina-border rounded-2xl w-full max-w-md p-6 relative shadow-neon-magenta">
+<button onclick="closeModal('newPostModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+<i class="fa-solid fa-xmark text-lg"></i>
+</button>
+​<h3 class="font-display text-xl font-bold text-white mb-1">Nueva Publicación</h3>
+<p class="text-xs text-gray-400 mb-5">Sube una imagen estática o un video corto en formato vertical.</p>
+​<form onsubmit="handleCreatePost(event)" class="space-y-4">
+<div>
+<label class="block text-xs font-medium text-gray-300 mb-1">Tipo de Contenido</label>
+<select id="postTypeInput" class="w-full bg-lumina-bg border border-lumina-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-lumina-magenta">
+<option value="image">Imagen / Ilustración</option>
+<option value="video">Video Corto (Short)</option>
+</select>
+</div>
+​<div>
+<label class="block text-xs font-medium text-gray-300 mb-1">Título / Nombre</label>
+<input type="text" id="postTitleInput" placeholder="Ej. Cyber Animation 2099" class="w-full bg-lumina-bg border border-lumina-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-lumina-magenta" required>
+</div>
+​<div>
+<label class="block text-xs font-medium text-gray-300 mb-1">URL del Archivo (Imagen o Video MP4)</label>
+<input type="url" id="postMediaInput" placeholder="https://..." class="w-full bg-lumina-bg border border-lumina-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-lumina-magenta" required>
+</div>
+​<div>
+<label class="block text-xs font-medium text-gray-300 mb-1">Tag Principal</label>
+<select id="postTagInput" class="w-full bg-lumina-bg border border-lumina-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-lumina-magenta">
+<option value="Cyberpunk">#Cyberpunk</option>
+<option value="ArteDigital">#ArteDigital</option>
+<option value="3D">#3D</option>
+<option value="Fotografia">#Fotografia</option>
+</select>
+</div>
+​<div>
+<label class="block text-xs font-medium text-gray-300 mb-1">Descripción / Audio</label>
+<textarea id="postDescInput" rows="2" placeholder="Escribe detalles o nombre de la pista sonora..." class="w-full bg-lumina-bg border border-lumina-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-lumina-magenta resize-none" required></textarea>
+</div>
+​<button type="submit" class="w-full bg-gradient-to-r from-lumina-magenta to-lumina-purple hover:from-lumina-magenta hover:to-lumina-cyan text-white py-2.5 rounded-lg font-bold text-sm transition-all shadow-neon-magenta mt-2">
+Publicar en Lumina
+</button>
+</form>
+</div>
+</div>
+​<!-- TOAST DE NOTIFICACIÓN -->
+<div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-lumina-card border border-lumina-cyan text-white px-4 py-3 rounded-xl shadow-neon-cyan flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-lumina-cyan"></i>
+<span id="toastMessage" class="text-xs font-medium">Acción completada</span>
+</div>
+​<!-- FOOTER -->
+<footer class="border-t border-lumina-border py-4 text-center text-xs text-gray-500">
+<p>© 2026 Lumina - Red Social Creativa & Videos Cortos</p>
+</footer>
+​<!-- LÓGICA JAVASCRIPT -->
+<script>
+let posts = [
+{
+id: 1,
+title: "Ciberpunk Neon Genesis",
+tag: "Cyberpunk",
+author: "Sora_VFX",
+avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&auto=format&fit=crop&q=80",
+likes: 142,
+liked: false,
+desc: "Metrópolis futurista bañada en luces de neón. Renderizado en Blender.",
+comments: [{ author: "Kira_Art", text: "¡Increíbles luces neón!" }]
+},
+{
+id: 2,
+title: "Retrato en Penumbra",
+tag: "Fotografia",
+author: "Elena_Nikon",
+avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80",
+image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop&q=80",
+likes: 98,
+liked: false,
+desc: "Fotografía nocturna en el centro de la metrópolis.",
+comments: []
+}
+];
+​let shorts = [
+{
+id: 101,
+author: "Neo_Motion",
+avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-neon-lights-in-a-futuristic-tunnel-41549-large.mp4",
+title: "Túnel de Luces Neón 3D ⚡",
+desc: "Loop de animación generativa con shaders de fluorescencia. #Cyberpunk #3D",
+audio: "Pista Original - Neo_Motion Synth",
+likes: 1240,
+liked: false,
+commentsCount: 89
+},
+{
+id: 102,
+author: "Aura_Digital",
+avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
+videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-abstract-laser-lights-background-41551-large.mp4",
+title: "Laser Beam Lightshow 🌌",
+desc: "Pruebas de refracción de partículas láser en Unreal Engine 5.",
+audio: "Cyberpunk Beat 2099 - Lumina Sound",
+likes: 3420,
+liked: true,
+commentsCount: 215
+}
+];
+​let currentActivePostId = null;
+​window.onload = () => {
+renderFeed();
+renderShortsFeed();
+​// Transición del SplashScreen después de 2.5 segundos
+setTimeout(() => {
+const splash = document.getElementById('splashScreen');
+if (splash) {
+splash.classList.add('opacity-0', 'pointer-events-none');
+setTimeout(() => splash.remove(), 700);
+}
+}, 2500);
+};
+​function switchTab(tab) {
+const exploreSec = document.getElementById('exploreSection');
+const shortsSec = document.getElementById('shortsSection');
+const tabExploreBtn = document.getElementById('tabExploreBtn');
+const tabShortsBtn = document.getElementById('tabShortsBtn');
+​if (tab === 'explore') {
+exploreSec.classList.remove('hidden');
+shortsSec.classList.add('hidden');
+tabExploreBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-gradient-to-r from-lumina-cyan to-lumina-purple text-black shadow-neon-cyan";
+tabShortsBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold text-gray-400 hover:text-white transition-all flex items-center gap-1.5";
+} else {
+exploreSec.classList.add('hidden');
+shortsSec.classList.remove('hidden');
+tabShortsBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-gradient-to-r from-lumina-magenta to-lumina-purple text-white shadow-neon-magenta flex items-center gap-1.5";
+tabExploreBtn.className = "px-4 py-1.5 rounded-full text-xs font-bold text-gray-400 hover:text-white transition-all";
+}
+}
+​function renderFeed(filterTag = 'Todos', searchQuery = '') {
+const grid = document.getElementById('postsGrid');
+const emptyMsg = document.getElementById('emptyFeedMessage');
+grid.innerHTML = '';
+​let filtered = posts.filter(post => {
+const matchesTag = filterTag === 'Todos' || post.tag === filterTag;
+const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+post.author.toLowerCase().includes(searchQuery.toLowerCase());
+return matchesTag && matchesSearch;
+});
+​if (filtered.length === 0) {
+emptyMsg.classList.remove('hidden');
+return;
+} else {
+emptyMsg.classList.add('hidden');
+}
+​filtered.forEach(post => {
+const card = document.createElement('div');
+card.className = "bg-lumina-card border border-lumina-border rounded-xl overflow-hidden hover:border-lumina-cyan transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between";
+card.innerHTML = <div class="relative overflow-hidden cursor-pointer aspect-square" onclick="openDetailModal(${post.id})"> <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"> <span class="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-lumina-cyan text-[10px] font-bold px-2.5 py-1 rounded-full border border-lumina-cyan/30"> #${post.tag} </span> </div> <div class="p-4 flex flex-col justify-between flex-1"> <h3 class="font-display font-bold text-white text-base line-clamp-1 mb-2 group-hover:text-lumina-cyan transition-colors cursor-pointer" onclick="openDetailModal(${post.id})">${post.title}</h3> <div class="flex items-center justify-between pt-2 border-t border-lumina-border/50"> <div class="flex items-center gap-2"> <img src="${post.avatar}" class="w-6 h-6 rounded-full object-cover border border-lumina-cyan"> <span class="text-xs text-gray-400 font-medium">${post.author}</span> </div> <button onclick="toggleLike(${post.id})" class="flex items-center gap-1.5 text-xs font-semibold ${post.liked ? 'text-lumina-magenta' : 'text-gray-400 hover:text-white'}"> <i class="${post.liked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> <span>${post.likes}</span> </button> </div> </div>;
+grid.appendChild(card);
+});
+}
+​function renderShortsFeed() {
+const container = document.getElementById('shortsFeed');
+container.innerHTML = '';
+​shorts.forEach(short => {
+const reel = document.createElement('div');
+reel.className = "reel-card w-full h-full relative flex items-center justify-center bg-black";
+reel.innerHTML = <video src="${short.videoUrl}" class="w-full h-full object-cover" loop autoplay muted playsinline onclick="toggleVideoPlay(this)"></video> <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 pointer-events-none"></div> <div class="absolute bottom-5 left-4 right-16 text-white pointer-events-none"> <div class="flex items-center gap-2 mb-2"> <img src="${short.avatar}" class="w-8 h-8 rounded-full border border-lumina-cyan object-cover"> <span class="text-xs font-bold">@${short.author}</span> </div> <h4 class="font-display font-bold text-sm mb-1">${short.title}</h4> <p class="text-xs text-gray-300 line-clamp-2">${short.desc}</p> </div> <div class="absolute right-3 bottom-8 flex flex-col items-center gap-5 z-10"> <button onclick="toggleShortLike(${short.id}, this)" class="flex flex-col items-center gap-1"> <div class="w-10 h-10 rounded-full bg-black/60 border border-lumina-border flex items-center justify-center ${short.liked ? 'text-lumina-magenta' : 'text-white'}"> <i class="fa-solid fa-heart text-lg"></i> </div> <span class="text-[10px] font-bold text-white">${short.likes}</span> </button> <button onclick="showToast('Comentarios')" class="flex flex-col items-center gap-1"> <div class="w-10 h-10 rounded-full bg-black/60 border border-lumina-border flex items-center justify-center text-white"> <i class="fa-solid fa-comment text-lg"></i> </div> <span class="text-[10px] font-bold text-white">${short.commentsCount}</span> </button> </div>;
+container.appendChild(reel);
+});
+}
+​function toggleVideoPlay(video) {
+if (video.paused) {
+video.play();
+} else {
+video.pause();
+}
+}
+​function toggleLike(postId) {
+const post = posts.find(p => p.id === postId);
+if (post) {
+post.liked = !post.liked;
+post.likes += post.liked ? 1 : -1;
+renderFeed();
+}
+}
+​function toggleShortLike(shortId, btn) {
+const short = shorts.find(s => s.id === shortId);
+if (short) {
+short.liked = !short.liked;
+short.likes += short.liked ? 1 : -1;
+renderShortsFeed();
+}
+}
+​function filterByTag(tag, btn) {
+document.querySelectorAll('.tag-btn').forEach(b => {
+b.className = "tag-btn px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border border-lumina-border text-gray-300 hover:border-lumina-cyan hover:text-lumina-cyan";
+});
+btn.className = "tag-btn px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border bg-lumina-cyan/20 border-lumina-cyan text-lumina-cyan shadow-neon-cyan";
+renderFeed(tag);
+}
+​function handleSearch(query) {
+renderFeed('Todos', query);
+}
+​function openDetailModal(postId) {
+const post = posts.find(p => p.id === postId);
+if (!post) return;
+currentActivePostId = postId;
+​document.getElementById('detailImage').src = post.image;
+document.getElementById('detailAuthor').innerText = post.author;
+document.getElementById('detailAvatar').src = post.avatar;
+document.getElementById('detailTag').innerText = #${post.tag};
+document.getElementById('detailTitle').innerText = post.title;
+document.getElementById('detailDesc').innerText = post.desc;
+document.getElementById('detailLikesCount').innerText = post.likes;
+​renderComments(post.comments);
+openModal('detailModal');
+}
+​function renderComments(comments) {
+const list = document.getElementById('commentsList');
+list.innerHTML = '';
+if (comments.length === 0) {
+list.innerHTML = '<p class="text-xs text-gray-500">Sé el primero en comentar.</p>';
+return;
+}
+comments.forEach(c => {
+const item = document.createElement('div');
+item.className = "bg-lumina-bg/60 p-2.5 rounded-lg border border-lumina-border/40 text-xs";
+item.innerHTML = <span class="font-bold text-lumina-cyan mr-1.5">${c.author}:</span><span class="text-gray-300">${c.text}</span>;
+list.appendChild(item);
+});
+}
+​function handleAddComment(e) {
+e.preventDefault();
+const input = document.getElementById('commentInput');
+const text = input.value.trim();
+if (!text || !currentActivePostId) return;
+​const post = posts.find(p => p.id === currentActivePostId);
+if (post) {
+post.comments.push({ author: "Tú", text });
+renderComments(post.comments);
+input.value = '';
+showToast("Comentario agregado");
+}
+}
+​function handleCreatePost(e) {
+e.preventDefault();
+const type = document.getElementById('postTypeInput').value;
+const title = document.getElementById('postTitleInput').value;
+const media = document.getElementById('postMediaInput').value;
+const tag = document.getElementById('postTagInput').value;
+const desc = document.getElementById('postDescInput').value;
+​if (type === 'image') {
+posts.unshift({
+id: Date.now(),
+title,
+tag,
+author: "Alex_Rivers",
+avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+image: media,
+likes: 1,
+liked: true,
+desc,
+comments: []
+});
+renderFeed();
+} else {
+shorts.unshift({
+id: Date.now(),
+author: "Alex_Rivers",
+avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+videoUrl: media,
+title,
+desc,
+audio: "Audio Original",
+likes: 1,
+liked: true,
+commentsCount: 0
+});
+renderShortsFeed();
+}
+​closeModal('newPostModal');
+showToast("Publicado correctamente en Lumina");
+}
+​function openModal(id) {
+const modal = document.getElementById(id);
+modal.classList.remove('opacity-0', 'pointer-events-none');
+}
+​function closeModal(id) {
+const modal = document.getElementById(id);
+modal.classList.add('opacity-0', 'pointer-events-none');
+}
+​function showToast(msg) {
+const toast = document.getElementById('toast');
+document.getElementById('toastMessage').innerText = msg;
+toast.classList.remove('translate-y-20', 'opacity-0');
+setTimeout(() => {
+toast.classList.add('translate-y-20', 'opacity-0');
+}, 2500);
+}
+</script>
+</body>
+</html>
